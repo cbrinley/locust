@@ -10,7 +10,8 @@ import warnings
 import traceback
 import logging
 
-from clients import HttpSession
+#from clients import HttpSession
+from clients import client_loader
 import events
 
 from exception import LocustError, InterruptTaskSet, RescheduleTask, RescheduleTaskImmediately, StopLocust
@@ -64,7 +65,9 @@ class Locust(object):
     """
     
     host = None
-    """Base hostname to swarm. i.e: http://127.0.0.1:1234"""
+    """Base hostname to swarm. i.e: 127.0.0.1:1234. If not port is specified
+       the client's default will be chosen.
+    """
     
     min_wait = 1000
     """Minimum waiting time between the execution of locust tasks"""
@@ -80,6 +83,12 @@ class Locust(object):
     Instance of HttpSession that is created upon instantiation of Locust. 
     The client support cookies, and therefore keeps the session between HTTP requests.
     """
+
+    client_type = "http"
+    """
+    This is the friendly synonym for the client to load. See clients.__init__.py for exact
+    supported names. This will control which client implmentation is chosen.
+    """
     
     task_set = None
     """TaskSet class that defines the execution behaviour of this locust"""
@@ -92,10 +101,13 @@ class Locust(object):
     
     def __init__(self):
         super(Locust, self).__init__()
-        if self.host is None:
-            raise LocustError("You must specify the base host. Either in the host attribute in the Locust class, or on the command line using the --host option.")
+        if not self.host is None:
+	    err =  "You must specify the base host. Either in the host attribute in the Locust class, "
+	    err += "or on the command line using the --host option."
+	    raise LocustError(err)
         
-        self.client = HttpSession(base_url=self.host)
+        #self.client = HttpSession(base_url=self.host)
+	self.client = client_loader(self.client_type)(self.host)
     
     def run(self):
         try:
