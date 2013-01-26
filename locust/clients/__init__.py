@@ -16,6 +16,7 @@ synonyms for HttpSession client.
 '''
 client_index = {
   HttpSession : ["web","http","HttpSession"],
+  HttpsSession : ["https","sslweb","HttpsSession"]
 }
 
 
