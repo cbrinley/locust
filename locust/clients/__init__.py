@@ -3,7 +3,8 @@ all clients need to be explicitly imported here.
 Not fancy but sure not to have odd bugs. I'm looking
 at you __import__
 '''
-from httpclient import HttpSession
+from httpclient import HttpSession,HttpsSession
+from zookeeperclient import ZookeeperSession
 
 #internal imports
 from locust.exceptions import LocustError
@@ -16,7 +17,8 @@ synonyms for HttpSession client.
 '''
 client_index = {
   HttpSession : ["web","http","HttpSession"],
-  HttpsSession : ["https","sslweb","HttpsSession"]
+  HttpsSession : ["https","sslweb","HttpsSession"],
+  ZookeeperSession : ["zookeeper","zk","ZookeeperSession"]
 }
 
 

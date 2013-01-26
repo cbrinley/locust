@@ -34,7 +34,16 @@ def parse_options():
         '-H', '--host',
         dest="host",
         default=None,
-        help="Host to load test in the following format: http://10.21.32.33"
+        help="Hostname or IP to load test, tcp port may optionally be specified. \
+              Note different client types may define alternative notation for host\
+              definition. See client_type documentation for specifics."
+    )
+    parser.add_option(
+        '-T', "--client-type",
+        type="str",
+        dest="client_type",
+        default="http",
+        help="The kind of client/protocol to use. Defaults to http."
     )
     parser.add_option(
         '-P', '--port',
@@ -360,15 +369,17 @@ def main():
         main_greenlet = gevent.spawn(web.start, locust_classes, options.hatch_rate, options.num_clients, options.num_requests, options.ramp, options.port)
     
     if not options.master and not options.slave:
-        runners.locust_runner = LocalLocustRunner(locust_classes, options.hatch_rate, options.num_clients, options.num_requests, options.host)
+        runners.locust_runner = LocalLocustRunner(locust_classes, options.hatch_rate, options.num_clients, options.num_requests, options.host, options.client_type)
         # spawn client spawning/hatching greenlet
         if options.no_web:
             runners.locust_runner.start_hatching(wait=True)
             main_greenlet = runners.locust_runner.greenlet
     elif options.master:
-        runners.locust_runner = MasterLocustRunner(locust_classes, options.hatch_rate, options.num_clients, num_requests=options.num_requests, host=options.host, master_host=options.master_host)
+        runners.locust_runner = MasterLocustRunner(locust_classes, options.hatch_rate, options.num_clients, num_requests=options.num_requests, 
+                                  host=options.host, master_host=options.master_host,client_type=options.client_type)
     elif options.slave:
-        runners.locust_runner = SlaveLocustRunner(locust_classes, options.hatch_rate, options.num_clients, num_requests=options.num_requests, host=options.host, master_host=options.master_host)
+        runners.locust_runner = SlaveLocustRunner(locust_classes, options.hatch_rate, options.num_clients, num_requests=options.num_requests, 
+                                  host=options.host, master_host=options.master_host, client_type=options.client_type)
         main_greenlet = runners.locust_runner.greenlet
     
     if options.print_stats or (options.no_web and not options.slave):
