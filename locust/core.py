@@ -107,7 +107,7 @@ class Locust(object):
 	    raise LocustError(err)
         
         #self.client = HttpSession(base_url=self.host)
-	self.client = client_loader(self.client_type)(self.host)
+	    self.client = client_loader(self.client_type)(self.host)
     
     def run(self):
         try:
