@@ -28,12 +28,13 @@ SLAVE_REPORT_INTERVAL = 3.0
 
 
 class LocustRunner(object):
-    def __init__(self, locust_classes, hatch_rate, num_clients, num_requests=None, host=None):
+    def __init__(self, locust_classes, hatch_rate, num_clients, num_requests=None, host=None, client_type=None):
         self.locust_classes = locust_classes
         self.hatch_rate = hatch_rate
         self.num_clients = num_clients
         self.num_requests = num_requests
         self.host = host
+        self.client_type = client_type
         self.locusts = Group()
         self.state = STATE_INIT
         self.hatching_greenlet = None
@@ -74,6 +75,8 @@ class LocustRunner(object):
                 locust.host = self.host
             if stop_timeout is not None:
                 locust.stop_timeout = stop_timeout
+            if self.client_type is not None:
+                locust.client_type = self.client_type
 
             # create locusts depending on weight
             percent = locust.weight / float(weight_sum)
@@ -187,8 +190,8 @@ class LocustRunner(object):
         self.exceptions[key] = row
 
 class LocalLocustRunner(LocustRunner):
-    def __init__(self, locust_classes, hatch_rate, num_clients, num_requests, host=None):
-        super(LocalLocustRunner, self).__init__(locust_classes, hatch_rate, num_clients, num_requests, host)
+    def __init__(self, locust_classes, hatch_rate, num_clients, num_requests, host=None, client_type=None):
+        super(LocalLocustRunner, self).__init__(locust_classes, hatch_rate, num_clients, num_requests, host, client_type)
 
         # register listener thats logs the exception for the local runner
         def on_locust_error(locust, e, tb):
@@ -201,8 +204,8 @@ class LocalLocustRunner(LocustRunner):
         self.greenlet = self.hatching_greenlet
 
 class DistributedLocustRunner(LocustRunner):
-    def __init__(self, locust_classes, hatch_rate, num_clients, num_requests, host=None, master_host="localhost"):
-        super(DistributedLocustRunner, self).__init__(locust_classes, hatch_rate, num_clients, num_requests, host)
+    def __init__(self, locust_classes, hatch_rate, num_clients, num_requests, host=None, master_host="localhost", client_type=None):
+        super(DistributedLocustRunner, self).__init__(locust_classes, hatch_rate, num_clients, num_requests, host, client_type=None)
         self.master_host = master_host
     
     def noop(self, *args, **kwargs):
@@ -274,7 +277,8 @@ class MasterLocustRunner(DistributedLocustRunner):
             self.exceptions = {}
         
         for client in self.clients.itervalues():
-            data = {"hatch_rate":slave_hatch_rate, "num_clients":slave_num_clients, "num_requests": self.num_requests, "host":self.host, "stop_timeout":None}
+            data = {"hatch_rate":slave_hatch_rate, "num_clients":slave_num_clients, "num_requests":self.num_requests, 
+                    "host":self.host, "stop_timeout":None, "client_type":self.client_type}
             self.server.send(Message("hatch", data, None))
         
         RequestStats.global_start_time = time()
@@ -367,6 +371,7 @@ class SlaveLocustRunner(DistributedLocustRunner):
                 #self.num_clients = job["num_clients"]
                 self.num_requests = job["num_requests"]
                 self.host = job["host"]
+                self.client_type = job["client_type"]
                 self.hatching_greenlet = gevent.spawn(lambda: self.start_hatching(locust_count=job["num_clients"], hatch_rate=job["hatch_rate"]))
             elif msg.type == "stop":
                 self.stop()

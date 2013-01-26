@@ -28,4 +28,4 @@ def client_loader(client_type):
   for client_impl,names in client_index.items():
     if client_type in names:
       return client_impl
-  LocustError("No valid client type was specified.")
+  raise LocustError("No valid client type was specified.")
