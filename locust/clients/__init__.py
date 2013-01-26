@@ -5,6 +5,9 @@ at you __import__
 '''
 from httpclient import HttpSession
 
+#internal imports
+from locust.exceptions import LocustError
+
 
 '''
 client_index is a lookup table that allows associating one or more
@@ -25,4 +28,4 @@ def client_loader(client_type):
   for client_impl,names in client_index.items():
     if client_type in names:
       return client_impl
-  
+  LocustError("No valid client type was specified.")
