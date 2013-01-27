@@ -2,6 +2,14 @@
 Changelog
 ##########
 
+0.6.2-cb
+=====
+* Added support for arbitrary client types
+* **API change** Client and ContextManager now inherit from baseclient.BaseClient and BaseContextManager. Since multiple of each
+  are now supported this is future proofing the code but currently not used.
+* **API change** clients in now package. Backwards compatibility is maintained via __init__ import in clients package.
+* Added support for zookeeper clients
+
 0.6.2
 =====
 

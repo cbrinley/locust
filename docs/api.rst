@@ -47,7 +47,7 @@ for locust since it's so central when writing locust load tests. You can also lo
 ResponseContextManager class
 ============================
 
-.. autoclass:: locust.clients.ResponseContextManager
+.. autoclass:: locust.clients.baseclient.ResponseContextManager
 	:members: success, failure
 
 

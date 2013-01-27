@@ -9,7 +9,7 @@ from requests import Response
 from requests.packages.urllib3.response import HTTPResponse
 from requests.auth import HTTPBasicAuth
 from requests.exceptions import RequestException, ConnectionError, HTTPError
-from baseclient import BaseClient
+from baseclient import BaseClient, BaseContextManager
 
 import events
 from exception import CatchResponseError, ResponseError
@@ -179,10 +179,9 @@ class HttpsSession(HttpSession):
 	  base_url = base_url.replace("http://","https://")
 	else: base_url = "https://" + base_url
 	HttpSession.__init__(self,base_url,*args,**kwargs)
- 
 
 
-class ResponseContextManager(requests.Response):
+class ResponseContextManager(BaseContextManager,requests.Response):
     """
     A Response class that also acts as a context manager that provides the ability to manually 
     control if an HTTP request should be marked as successful or a failure in Locust's statistics
