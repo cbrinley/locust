@@ -46,7 +46,7 @@ class ZookeeperSession(BaseClient):
      start() parameters provided will override defaults.
     '''
     defaults = {
-      "hosts" : self.server_list
+      "hosts" : self.server_list,
       "handler" : SequentialGeventHandler()
     }
     defaults.update(getattr(self,self.session_policy))
