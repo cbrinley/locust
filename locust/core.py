@@ -101,10 +101,10 @@ class Locust(object):
     
     def __init__(self):
         super(Locust, self).__init__()
-        if not self.host is None:
-	    err =  "You must specify the base host. Either in the host attribute in the Locust class, "
-	    err += "or on the command line using the --host option."
-	    raise LocustError(err)
+        if self.host is None:
+	       err =  "You must specify the base host. Either in the host attribute in the Locust class, "
+	       err += "or on the command line using the --host option."
+	       raise LocustError(err)
         
         #self.client = HttpSession(base_url=self.host)
 	    self.client = client_loader(self.client_type)(self.host)
