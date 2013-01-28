@@ -37,8 +37,8 @@ class ZookeeperSession(BaseClient):
   def __init__(self,server_list,session_policy="loose",*args,**kwargs):
     super(ZookeeperSession).__init__(self,*args,**kwargs)
     self.session_policy = session_policy+"_policy"
-		self.zk_client = None 
-		self.server_list = server_list
+  	self.zk_client = None 
+  	self.server_list = server_list
 
   def connect(self,*args,**kwargs):
   	'''See http://kazoo.readthedocs.org/en/latest/api/client.html
@@ -52,7 +52,7 @@ class ZookeeperSession(BaseClient):
     defaults.update(getattr(self,self.session_policy))
     defaults.update(kwargs)
     self._state = KazooState.LOST
-	  self._zookeeper_client = KazooClient(**defaults)
+    self._zookeeper_client = KazooClient(**defaults)
     self._zookeeper_client.add_listener(self._state_tracker)
     watchable = self._zookeeper_client.start_async()
     watchable.wait(30)
