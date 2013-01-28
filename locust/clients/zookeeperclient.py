@@ -46,6 +46,7 @@ def record_stats(func):
       request_meta["content_size"],
     )
     return ret
+  return record_stats_decorator
 
 
 
