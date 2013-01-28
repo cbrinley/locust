@@ -7,16 +7,27 @@ from baseclient import BaseClient
 from baseclient import BaseContextManager
 
 def require_state(state):
+  '''This decorator can be used to ensure the client is in
+     the provided state before allowing the decorated function
+     to run. If not the function will be rescheduled.
+     This decorator assumes it is wrapping an object instance
+     method with self._state of type kazoo.protocol.states.KazooState
+  '''
   def rs_callable_capture(func):
     def require_state_decorator(self,*args,**kwargs):
       if self._state != state:
-       raise RescheduleTask("Zookeeper connection lost. Task will be retried later.")
+        err = "Zookeeper connection is not in correct state to execute function: "
+        err += "%s. Requires %s Found %s. Rescheduling this task."
+        err = err % (func,state,self._state)
+        raise RescheduleTask(err)
       else: return func(self,*args,**kwargs)
     return require_state_decorator
   return rs_callable_capture
 
+
 class ZookeeperResponseContextManager(BaseContextManager):
   exception_class = ResponseError
+
 
 class ZookeeperSession(BaseClient):
   conext_manager = ZookeeperResponseContextManager
