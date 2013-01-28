@@ -1,11 +1,15 @@
+import os,sys,time,traceback
 from kazoo.client import KazooClient
 from kazoo.protocol.states import KazooState
 from kazoo.handlers.gevent import SequentialGeventHandler
 from locust.exception import RescheduleTask
 from locust.exception import ResponseError
+from locust import events
 from baseclient import BaseClient
 from baseclient import BaseContextManager
 
+
+#supporting decorators
 def require_state(state):
   '''This decorator can be used to ensure the client is in
      the provided state before allowing the decorated function
@@ -23,6 +27,26 @@ def require_state(state):
       else: return func(self,*args,**kwargs)
     return require_state_decorator
   return rs_callable_capture
+
+def record_stats(func):
+  def record_stats_decorator(*args,**kwargs):
+    request = {}
+    request["method"] = func.__name__
+    request["name"] = args[1] #TODO fix this, temporary hack for demo
+    request["response_time"] = 0
+    request["content_size"] = 0 #TODO find some valid way of measuring this.
+    start = time.time()
+    ret = func(*args,**kwargs)
+    end = time.time()
+    response_time["response_time"] = int(end - start) * 1000
+    events.request_success.fire(
+      request_meta["method"],
+      request_meta["name"],
+      request_meta["response_time"],
+      request_meta["content_size"],
+    )
+    return ret
+
 
 
 class ZookeeperResponseContextManager(BaseContextManager):
@@ -66,10 +90,10 @@ class ZookeeperSession(BaseClient):
       raise ResponseError(err)
 
   @require_state(KazooState.CONNECTED)
+  @record_stats
   def ensure_path(self,path,watcher=None):
-    #TODO: add internal event and timing information.
     self._zookeeper_client.ensure_path(path,watcher)
-
+    
   def _state_tracker(self,state):
     self._state = state
 
