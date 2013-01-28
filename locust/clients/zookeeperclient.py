@@ -35,7 +35,7 @@ class ZookeeperSession(BaseClient):
   strict_policy = {}
 
   def __init__(self,server_list='127.0.0.1:2181',*args,**kwargs):
-    super(ZookeeperSession,self).__init__(self,*args,**kwargs)
+    super(ZookeeperSession,self).__init__(*args,**kwargs)
     self.session_policy = "loose_policy"
     self._zookeeper_client = None 
     self.server_list = server_list
@@ -74,6 +74,7 @@ class ZookeeperSession(BaseClient):
     self._state = state
 
   def __del__(self):
-    self._zookeeper_client.stop() 
+    if isinstance(self._zookeeper_client, KazooClient):
+      self._zookeeper_client.stop() 
 
 
