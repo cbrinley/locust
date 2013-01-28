@@ -41,10 +41,10 @@ class ZookeeperSession(BaseClient):
     self.server_list = server_list
 
   def connect(self,*args,**kwargs):
-  	'''See http://kazoo.readthedocs.org/en/latest/api/client.html
-  	   for details regarding available options. Any provided client
-       start() parameters provided will override defaults.
-  	'''
+    '''See http://kazoo.readthedocs.org/en/latest/api/client.html
+     for details regarding available options. Any provided client
+     start() parameters provided will override defaults.
+    '''
     defaults = {
       "hosts" : self.server_list
       "handler" : SequentialGeventHandler()
