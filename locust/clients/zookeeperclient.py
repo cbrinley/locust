@@ -37,8 +37,8 @@ class ZookeeperSession(BaseClient):
   def __init__(self,server_list,session_policy="loose",*args,**kwargs):
     super(ZookeeperSession).__init__(self,*args,**kwargs)
     self.session_policy = session_policy+"_policy"
-  	self.zk_client = None 
-  	self.server_list = server_list
+    self.zk_client = None 
+    self.server_list = server_list
 
   def connect(self,*args,**kwargs):
   	'''See http://kazoo.readthedocs.org/en/latest/api/client.html
