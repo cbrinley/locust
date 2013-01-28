@@ -34,7 +34,7 @@ class ZookeeperSession(BaseClient):
   loose_policy = {}
   strict_policy = {}
 
-	def __init__(self,server_list,session_policy="loose",*args,**kwargs):
+  def __init__(self,server_list,session_policy="loose",*args,**kwargs):
     super(ZookeeperSession).__init__(self,*args,**kwargs)
     self.session_policy = session_policy+"_policy"
 		self.zk_client = None 
@@ -61,7 +61,7 @@ class ZookeeperSession(BaseClient):
       raise ResponseError(err)
 
   @require_state(KazooState.CONNECTED)
-	def ensure_path(self,path,watcher=None):
+  def ensure_path(self,path,watcher=None):
     #TODO: add internal event and timing information.
     self._zookeeper_client.ensure_path(path,watcher)
 
