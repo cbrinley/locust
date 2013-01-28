@@ -34,11 +34,16 @@ class ZookeeperSession(BaseClient):
   loose_policy = {}
   strict_policy = {}
 
-  def __init__(self,server_list,session_policy="loose",*args,**kwargs):
+  def __init__(self,server_list='127.0.0.1:2181',*args,**kwargs):
     super(ZookeeperSession).__init__(self,*args,**kwargs)
-    self.session_policy = session_policy+"_policy"
+    self.session_policy = "loose_policy"
     self.zk_client = None 
     self.server_list = server_list
+
+  def set_session_policy(self,session_policy="loose"):
+    '''prototype not currenlty used.
+    '''
+    self.session_policy = session_policy+"_policy"
 
   def connect(self,*args,**kwargs):
     '''See http://kazoo.readthedocs.org/en/latest/api/client.html
