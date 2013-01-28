@@ -7,7 +7,7 @@ from httpclient import HttpSession,HttpsSession
 from zookeeperclient import ZookeeperSession
 
 #internal imports
-from locust.exceptions import LocustError
+from locust.exception import LocustError
 
 
 '''
