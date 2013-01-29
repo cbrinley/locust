@@ -1,3 +1,27 @@
+'''FOR THE FUTURE NONE OF THESE COMMENTS MAY END UP BEING IMPLMENTED
+currently all events are defined in this module. this is great because
+it allows a clean syntax of:
+import events
+events.some_event.fire(*args)
+
+however some modularity is likely beneficial since events are more light weight
+than things like clients, runners or reports. a reporting engine may want to 
+listen for events defined on a given model. it is a bit clumsy from a 
+organizational standpoint to have all of those various model events literally 
+defined here. but when calling the event we would still like to use the 
+events.<eventID> convention.
+
+Some other considerations. Having all events literally defined here has the
+advantage for documentation purposes of being well organized. Some care
+to how such an organization can ideal be preserved should be considered.
+
+the model i am currently considering will look something like this:
+client_code -> general_event (i.e. success/failure) 
+-> model -> handle_failure -> extract relevant bits
+-> store in model specific format -> generate_event (i.e. foo_model_update)
+-> reporter -> handle_update -> domain specific output.
+'''
+
 class EventHook(object):
 	"""
 	Simple event class used to provide hooks for different types of events in Locust.
