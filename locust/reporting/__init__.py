@@ -44,9 +44,15 @@ Graphite(BaseReport):
     self.send_or_queue(name,value)
 
 
- Reports will have one general and one modified "base class"
- general will do what all good base classes do, sit around and
- collect the credit for the real work.
- The more specific base class will be SingletonReport
- this will allow only one instance of a report to ever be created.
+RANDOM THOUGHTS, NONE MAY APPLY IN THE FUTURE
+ There will be a normal baseclass for all general elements and
+ which will provide a mechanism to "know" if the instance
+ is in a master or a slave. The report class may choose to proxy
+ its data over to the master our out to the slaves. The runners
+ will handle the transport mechanisms as today but will also provide
+ a mechanism to re-call the same event on the remote side as if it had
+ happened locally. Some mechanism for knowing where the event originally
+ came from may be needed.
+
+ Core will expose a new singleton class which will do just that
 '''
