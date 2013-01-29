@@ -1,5 +1,12 @@
 # encoding: utf-8
 
+'''
+FOR THE FUTURE NONE OF THESE COMMENTS MAY END UP BEING REALIZED.
+this will eventually be migrated to the reporting package. since it is generally of that category.
+longer term this will be broken out into is component reporting and model sub-attributes.
+as with stats.py this will allow the web interface to support a greater range of visualization
+approaches and data.
+'''
 import json
 import os.path
 from time import time

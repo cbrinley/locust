@@ -1,3 +1,14 @@
+'''
+FOR THE FUTURE NONE OF THESE COMMENTS MAY END UP BEING REALIZED.
+stats will be broken up into three sub components.
+console-reporter under the reporting package
+various stats manipulation functions which reporters may use.
+the components of this class that are request specific will go under statistics
+as they represent the model for Requests. as such there will be other
+models such as time series metrics, etc.
+This decoupling of models and reporting will allow better leveraging 
+of different reporting technologies with adapters for specific stats models.
+'''
 import time
 import gevent
 from copy import copy
