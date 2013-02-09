@@ -30,13 +30,14 @@ def parse_options():
     # Initialize
     parser = OptionParser(usage="locust [options] [LocustClass [LocustClass2 ... ]]")
 
+    help_text =  "Hostname or IP to load test, tcp port may optionally be specified. "
+    help_text += "Note different client types may define alternative notation for host "
+    help_text += "definition. See client_type documentation for specifics."
     parser.add_option(
         '-H', '--host',
         dest="host",
         default=None,
-        help="Hostname or IP to load test, tcp port may optionally be specified. \
-              Note different client types may define alternative notation for host\
-              definition. See client_type documentation for specifics."
+        help=help_text
     )
     parser.add_option(
         '-T', "--client-type",
