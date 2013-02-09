@@ -80,10 +80,12 @@ def try_load(mod_name,class_name):
         init_logger.warning("%s was not found in %s." % (name,mod_name))
     return module_object,out_names
   except ImportError, exc:
-    err =  "An attempt to load client %s failed. " % class_name
-    err += "A dependency of this client may not be installed."
-    err += "\n          REASON: %s" % str(exc) #spaces are for output formating.
-    init_logger.warning(err)
+    err1 = "An attempt to load client %s failed. " % class_name
+    err2 = "A dependency of this client may not be installed."
+    err3 = "REASON: %s" % str(exc) #spaces are for output formating.
+    init_logger.warning(err1)
+    init_logger.warning(err2)
+    init_logger.warning(err3)
     return None,None
   except Exception,exc:
     #let users keep working even if some clients can't be loaded.

@@ -1,13 +1,18 @@
 import logging
+from logging.handlers import MemoryHandler
 import sys
 
 def setup_logging(loglevel, logfile):
+    global init_handler
     numeric_level = getattr(logging, loglevel.upper(), None)
     if numeric_level is None:
         raise ValueError("Invalid log level: %s" % loglevel)
     
     log_format = "[%(asctime)s] %(levelname)s/%(name)s: %(message)s"
     logging.basicConfig(level=numeric_level, filename=logfile, format=log_format)
+    init_handler.setTarget(logging.root)
+    init_handler.flush()
+
     
     sys.stderr = StdErrWrapper()
     sys.stdout = StdOutWrapper()
@@ -44,10 +49,11 @@ requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.WARNING)
 
 #logger to handle initial startup messages in a pretty way
-init_logger = logging.getLogger("initialization")
-init_logger.setLevel(logging.INFO)
-init_handler = logging.StreamHandler()
-init_handler.setLevel(logging.INFO)
-init_handler.setFormatter(logging.Formatter('[%(levelname)s] <%(name)s>: %(message)s'))
+#messages are buffered so that when user issues: locust --help
+#they don't get ugly warnings.
+#this log handler is flushed in setup__logging
+init_logger = logging.getLogger("initialize")
+init_logger.setLevel(logging.DEBUG)
+init_handler = MemoryHandler(1000,flushLevel=logging.DEBUG) 
 init_logger.addHandler(init_handler)
 
