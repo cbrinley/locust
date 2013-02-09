@@ -42,3 +42,12 @@ console_logger.propagate = False
 # configure python-requests log level
 requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.WARNING)
+
+#logger to handle initial startup messages in a pretty way
+init_logger = logging.getLogger("initialization")
+init_logger.setLevel(logging.INFO)
+init_handler = logging.StreamHandler()
+init_handler.setLevel(logging.INFO)
+init_handler.setFormatter(logging.Formatter('[%(levelname)s] <%(name)s>: %(message)s'))
+init_logger.addHandler(init_handler)
+

@@ -302,6 +302,10 @@ def load_locustfile(path):
     return imported.__doc__, locusts
 
 def main():
+    #below print statement is for output formatting. if any
+    #warnings were issued they would normall run right into output
+    #of locust --help. this just makes output more readable.
+    print "\n" 
     parser, options, arguments = parse_options()
 
     # setup logging
